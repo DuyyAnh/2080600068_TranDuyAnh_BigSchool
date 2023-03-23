@@ -1,31 +1,160 @@
-﻿@model IEnumerable<_2080600068_TranDuyAnh_BigSchool.Models.Course>
+﻿@model _2080600068_TranDuyAnh_BigSchool.ViewModels.CourseViewModel
+
 @{
     ViewBag.Title = "Home page";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <ul class="course">
-        @foreach (var course in Model)
-         {
-            <li>
-                <div class="date">
-                    <div class="month">
-                        @course.DateTime.ToString("MM")
-                    </div>
-                    <div class="day">
-                        @course.DateTime.ToString("dd")
-                    </div>
+    @foreach (var course in Model.UpcommingCourses)
+    {
+        <li>
+            <div class="date">
+                <div class="month">
+                    @course.DateTime.ToString("MM")
                 </div>
-                <div class="details">
-                    <span class="lectuner">
-                        @course.Lecturer.Name
-                    </span>
-                    <span class="category">
-                        @course.Category.Name
-                    </span>
+                <div class="day">
+                    @course.DateTime.ToString("dd")
                 </div>
-                
-            </li>
-         }
+            </div>
+            <div class="details">
+                <span class="lectuner">
+                    @*@course.Lecturer.Name
+                        @if (Model.ShowAction)
+                        {
+                            <button class="btn btn-default btn-sm js-tongle-follow" data-user-id="@course.LecturerId">Follow</button>
+                        }*@
+                    @course.Lecturer.Name
+                    @if (Model.ShowAction)
+                    {
+                        if (course.isShowFollow)
+                        {
+                            <button class="btn btn-default btn-sm js-tongle-follow" data-user-id="@course.LecturerId">Follow</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-success btn-sm js-tongle-unfollow" data-user-id="@course.LecturerId">Following</button>
+                        }
+
+                    }
+                </span>
+                <span class="category">
+                    @course.Category.Name
+                    @if (Model.ShowAction)
+                    {
+                        if (course.isShowGoing)
+                        {
+                            <button data-course-id="@course.Id" class="btn btn-default btn-sm js-tongle-attendance">Going?</button>
+                        }
+                        else
+                        {
+                            <button data-course-id="@course.Id" class="btn btn-default btn-sm js-tongle-unattendance">Going</button>
+                        }
+
+                    }
+                </span>
+                @*@if (Model.ShowAction)
+                    {
+                        <button data-course-id="@course.Id" class="btn btn-default btn-sm js-tongle-attendance">Going?</button>
+                    }*@
+            </div>
+
+        </li>
+    }
 </ul>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $(".js-tongle-attendance").click(function (e) {
+                var button = $(e.target);
+                $.post("/api/attendances", { Id: button.attr("data-course-id") })
+                    .done(function () {
+                        alert("Đăng ký khóa học thành công!");
+                        button.removeClass("btn-default");
+                        button.addClass("btn-info");
+                        button.text("Going");
+                        
+                    }).fail(function () {
+                        alert("Something fail");
+                    });
+
+            });
+            $(".js-tongle-unattendance").click(function (e) {
+                var button = $(e.target);
+                $.post("/api/attendances", { Id: button.attr("data-course-id") })
+                    .done(function () {
+                        alert("Huy khóa học thành công!");
+                        button.removeClass("btn-default");
+                        button.addClass("btn-info");
+                        button.text("Going");
+
+                    }).fail(function () {
+                        alert("Something fail");
+                    });
+
+            });
+            $(".js-tongle-follow").click(function (e) {
+                var button = $(e.target);
+                $.post("/api/followings", { FolloweeId: button.attr("data-user-id") })
+                    .done(function () {
+                        alert("Theo dõi khóa học thành công!");
+                        button.addClass("btn-success");
+                        button.text("Following");
+                       
+                    }).fail(function () {
+                        alert("Something fail");
+                    });
+
+            });
+            $(".js-tongle-unfollow").click(function (e) {
+                var button = $(e.target);
+                $.post("/api/followings", { FolloweeId: button.attr("data-user-id") })
+                    .done(function () {
+                        alert("Huy khóa học thành công!");
+                        button.addClass("btn-success");
+                        button.text("Following");
+
+                    }).fail(function () {
+                        alert("Something fail");
+                    });
+
+            });
+        });
+    </script>
+}
+@*@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $(".js-tongle-attendance").click(function (e) {
+                var button = $(e.target);
+                $.post("/api/attendances", { courseId: button.attr("data-course-id") })
+                    .done(function () {
+
+                        button.removeClass("btn-default");
+                        button.addClass("btn-info");
+                        button.text("Going");
+                        location.reload();
+                    }).fail(function () {
+                        alert("Something fail");
+                    });
+            });
+            $(".js-tongle-follow").click(function (e) {
+                var button = $(e.target);
+                $.post("/api/followings", { FolloweeId: button.attr("data-user-id") })
+                    .done(function () {
+
+                        button.addClass("btn-success");
+                        button.text("Following");
+
+                        location.reload();
+                    }).fail(function () {
+                        alert("Something fail");
+                    });
+            });
+        });
+    </script>
+}*@
+
 

@@ -11,8 +11,9 @@
                     @User.Identity.GetUserName() <span class="caret"></span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">Đến khóa học</a></li>
-                    <li><a href="#">Theo dõi bài học</a></li>
+                    <li>@Html.ActionLink("Danh Sách khóa học của tôi", "Mine", "Courses")</li>
+                    <li>@Html.ActionLink("Đến khóa học", "Attending", "Courses")</li>
+                    <li>@Html.ActionLink("Theo dõi khóa học", "Following", "Courses")</li>
                     <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
                 </ul>
             </li>   

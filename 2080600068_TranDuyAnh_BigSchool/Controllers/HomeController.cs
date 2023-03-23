@@ -1,4 +1,5 @@
 ﻿using _2080600068_TranDuyAnh_BigSchool.Models;
+using _2080600068_TranDuyAnh_BigSchool.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -21,8 +22,13 @@ namespace _2080600068_TranDuyAnh_BigSchool.Controllers
                 .Include(c => c.Lecturer)
                 .Include(c => c.Category)
                 .Where(c => c.DateTime > DateTime.Now);
-            return View(upcomingCourses);
-        }
 
+            var viewModel = new CourseViewModel
+            {
+                UpcommingCourses = upcomingCourses,
+                ShowAction = User.Identity.IsAuthenticated
+            };
+            return View(viewModel);
+        }
     }
-}
+} //Trang 50

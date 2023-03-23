@@ -9,6 +9,7 @@ namespace _2080600068_TranDuyAnh_BigSchool.ViewModels
 {
     public class CourseViewModel
     {
+        public int Id { get; set; }
         [Required]
         public string Place { get; set; }
         [Required]
@@ -19,7 +20,14 @@ namespace _2080600068_TranDuyAnh_BigSchool.ViewModels
         public string Time { get; set; }
         [Required]
         public byte Category { get; set; }
+        public bool ShowAction { get; set; }
         public IEnumerable<Category> Categories { get; set; }
+        public string Heading { get; set; }
+        public string Action
+        {
+            get { return (Id != 0) ? "Update" : "Create"; }
+        }
+        public IEnumerable<Course> UpcommingCourses { get; set; }
 
         public DateTime GetDateTime()
         {

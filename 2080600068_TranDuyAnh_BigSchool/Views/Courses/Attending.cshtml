@@ -1,0 +1,72 @@
+﻿@model _2080600068_TranDuyAnh_BigSchool.ViewModels.CourseViewModel
+
+@{
+    ViewBag.Title = "Attending";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Khóa học</h2>
+
+<ul class="course">
+    @foreach (var course in Model.UpcommingCourses)
+    {
+        <li>
+            <div class="date">
+                <div class="month">
+                    @course.DateTime.ToString("MM")
+                </div>
+                <div class="day">
+                    @course.DateTime.ToString("dd")
+                </div>
+            </div>
+            <div class="details">
+                <span class="lectuner">
+                    @course.Lecturer.Name
+                    @if (Model.ShowAction)
+                    {
+                        <button class="btn btn-default btn-sm js-tongle-follow" data-user-id="@course.LecturerId">Follow</button>
+                    }
+                </span>
+                <span class="category">
+                    @course.Category.Name
+
+                </span>
+                @if (Model.ShowAction)
+                {
+                    <button data-course-id="@course.Id" class="btn btn-default btn-sm js-tongle-attendance">Going?</button>
+                }
+            </div>
+
+        </li>
+    }
+</ul>
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $(".js-tongle-attendance").click(function (e) {
+                var button = $(e.target);
+                $.post("/api/attendances", { Id: button.attr("data-course-id") })
+                    .done(function () {
+                        alert("Đăng ký khóa học thành công!");
+                        button.removeClass("btn-default");
+                        button.addClass("btn-info");
+                        button.text("Going");
+                    }).fail(function () {
+                        alert("Something fail");
+                    });
+            });
+            $(".js-tongle-follow").click(function (e) {
+                var button = $(e.target);
+                $.post("/api/followings", { FolloweeId: button.attr("data-user-id") })
+                    .done(function () {
+                        alert("Theo dõi khóa học thành công!");
+                        button.addClass("btn-success");
+                        button.text("Following");
+                    }).fail(function () {
+                        alert("Something fail");
+                    });
+            });
+        });
+    </script>
+}
